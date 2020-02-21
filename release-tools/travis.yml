@@ -22,8 +22,10 @@ before_script:
   fi
 script:
 - make -k all test GOFLAGS_VENDOR=$( [ -d vendor ] && echo '-mod=vendor' )
+- make container
 after_success:
   - if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
       docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}" quay.io;
       make push GOFLAGS_VENDOR=$( [ -d vendor ] && echo '-mod=vendor' );
     fi
+  - docker images
